@@ -15,6 +15,7 @@ const Navbar = ({ logoSrc }) => {
 
     const handler = (ev) => {
       const detailUser = ev?.detail?.user ?? null;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoggedIn(!!detailUser);
     };
     window.addEventListener("authChanged", handler);
@@ -28,7 +29,7 @@ const Navbar = ({ logoSrc }) => {
       localStorage.removeItem("authToken");
       localStorage.removeItem("currentUser");
     } catch (e) {
-      // ignore errors
+      console.warn(e);
     }
 
     window.dispatchEvent(
@@ -77,9 +78,9 @@ const Navbar = ({ logoSrc }) => {
         {/* Desktop Buttons */}
         <div className={navbarStyles.desktopButtonsContainer}>
           <div className={navbarStyles.spacer}>
-            <NavLink to="/result" className={navbarStyles.resultsButton}>
+            <NavLink to="/" className={navbarStyles.resultsButton}>
               <Award className={navbarStyles.buttonIcon} />
-              My Result
+              Home
             </NavLink>
 
             {loggedIn ? (
@@ -117,12 +118,12 @@ const Navbar = ({ logoSrc }) => {
             <ul className={navbarStyles.mobileMenuList}>
               <li>
                 <NavLink
-                  to="/result"
+                  to="/"
                   className={navbarStyles.mobileMenuItem}
                   onClick={() => setMenuOpen(false)}
                 >
                   <Award className={navbarStyles.mobileMenuIcon} />
-                  My Result
+                  Home
                 </NavLink>
               </li>
               <li>

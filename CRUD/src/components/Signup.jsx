@@ -62,7 +62,7 @@ const Signup = ({ onSignupSuccess = null }) => {
       let data = {};
       try {
         data = await resp.json();
-      } catch (e) {}
+      } catch (e) { console.warn(e); }
 
       if (!resp.ok) {
         const msg = data?.message || "Registration failed";
@@ -82,7 +82,7 @@ const Signup = ({ onSignupSuccess = null }) => {
               }
             )
           );
-        } catch (error) {}
+        } catch (error) { console.warn(error); }
       }
 
       if (typeof onSignupSuccess === "function") {
@@ -93,7 +93,7 @@ const Signup = ({ onSignupSuccess = null }) => {
               email: email.trim().toLowerCase(),
             }
           );
-        } catch (err) {}
+        } catch (err) { console.warn(err); }
       }
       navigate("/login", { replace: true });
     } catch (error) {
@@ -140,9 +140,8 @@ const Signup = ({ onSignupSuccess = null }) => {
                       setName(e.target.value);
                       setErrors((s) => ({ ...s, name: undefined }));
                     }}
-                    className={`${signupStyles.input} ${
-                      errors.name ? signupStyles.inputError : signupStyles.inputNormal
-                    }`}
+                    className={`${signupStyles.input} ${errors.name ? signupStyles.inputError : signupStyles.inputNormal
+                      }`}
                     placeholder="John Doe"
                     required
                   />
@@ -165,9 +164,8 @@ const Signup = ({ onSignupSuccess = null }) => {
                       setEmail(e.target.value);
                       setErrors((s) => ({ ...s, email: undefined }));
                     }}
-                    className={`${signupStyles.input} ${
-                      errors.email ? signupStyles.inputError : signupStyles.inputNormal
-                    }`}
+                    className={`${signupStyles.input} ${errors.email ? signupStyles.inputError : signupStyles.inputNormal
+                      }`}
                     placeholder="your@example.com"
                     required
                   />
@@ -190,9 +188,8 @@ const Signup = ({ onSignupSuccess = null }) => {
                       setPassword(e.target.value);
                       setErrors((s) => ({ ...s, password: undefined }));
                     }}
-                    className={`${signupStyles.input} ${
-                      errors.password ? signupStyles.inputError : signupStyles.inputNormal
-                    }`}
+                    className={`${signupStyles.input} ${errors.password ? signupStyles.inputError : signupStyles.inputNormal
+                      }`}
                     placeholder="Create a password"
                     required
                   />
@@ -227,9 +224,8 @@ const Signup = ({ onSignupSuccess = null }) => {
                       setConfirmPassword(e.target.value);
                       setErrors((s) => ({ ...s, confirmPassword: undefined }));
                     }}
-                    className={`${signupStyles.input} ${
-                      errors.confirmPassword ? signupStyles.inputError : signupStyles.inputNormal
-                    }`}
+                    className={`${signupStyles.input} ${errors.confirmPassword ? signupStyles.inputError : signupStyles.inputNormal
+                      }`}
                     placeholder="Confirm password"
                     required
                   />
@@ -257,10 +253,10 @@ const Signup = ({ onSignupSuccess = null }) => {
         <div className={signupStyles.loginPromptContainer} >
           <div className={signupStyles.loginPromptContent}>
             <span className={signupStyles.loginPromptText}>
-                Already have an account?
+              Already have an account?
             </span>
             <Link to='/login' className={signupStyles.loginPromptLink}>
-            Login
+              Login
             </Link>
           </div>
         </div>

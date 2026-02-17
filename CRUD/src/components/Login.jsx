@@ -48,7 +48,7 @@ const Login = ({ onLoginSuccess = null }) => {
       try {
         data = await resp.json();
       } catch (e) {
-       //ignore 
+        console.warn(e);
       }
 
       if (!resp.ok) {
@@ -65,7 +65,7 @@ const Login = ({ onLoginSuccess = null }) => {
             JSON.stringify(data.user || { email: payload.email })
           );
         } catch (error) {
-          // ignore localStorage errors
+          console.warn(error);
         }
       }
 
@@ -128,11 +128,10 @@ const Login = ({ onLoginSuccess = null }) => {
                         if (errors.email)
                           setErrors((s) => ({ ...s, email: undefined }));
                       }}
-                      className={`${loginStyles.input} ${
-                        errors.email
+                      className={`${loginStyles.input} ${errors.email
                           ? loginStyles.inputError
                           : loginStyles.inputNormal
-                      }`}
+                        }`}
                       placeholder="your@example.com"
                       required
                     />
@@ -158,13 +157,11 @@ const Login = ({ onLoginSuccess = null }) => {
                         if (errors.password)
                           setErrors((s) => ({ ...s, password: undefined }));
                       }}
-                      className={`${loginStyles.input} ${
-                        loginStyles.passwordInput
-                      } ${
-                        errors.password
+                      className={`${loginStyles.input} ${loginStyles.passwordInput
+                        } ${errors.password
                           ? loginStyles.inputError
                           : loginStyles.inputNormal
-                      }`}
+                        }`}
                       placeholder="enter your password"
                       required
                     />

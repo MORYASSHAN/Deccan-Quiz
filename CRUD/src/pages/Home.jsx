@@ -1,14 +1,12 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import Sidebar from '../components/Sidebar'
+import React from 'react';
+import Sidebar from '../components/Sidebar';
 
 const Home = () => {
   return (
-    <div>
-      <Navbar/>
-      <Sidebar/>
+    <div className="h-full w-full">
+      <Sidebar />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
