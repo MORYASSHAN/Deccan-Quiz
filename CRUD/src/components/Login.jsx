@@ -15,7 +15,7 @@ const Login = ({ onLoginSuccess = null }) => {
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  const API_BASE = "http://localhost:4000";
+  const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
   // EMAIL + PASSWORD VALIDATION
   const validate = () => {
@@ -129,8 +129,8 @@ const Login = ({ onLoginSuccess = null }) => {
                           setErrors((s) => ({ ...s, email: undefined }));
                       }}
                       className={`${loginStyles.input} ${errors.email
-                          ? loginStyles.inputError
-                          : loginStyles.inputNormal
+                        ? loginStyles.inputError
+                        : loginStyles.inputNormal
                         }`}
                       placeholder="your@example.com"
                       required

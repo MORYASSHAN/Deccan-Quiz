@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Improve touch response */
+button, a {
+  touch-action: manipulation;
+}
