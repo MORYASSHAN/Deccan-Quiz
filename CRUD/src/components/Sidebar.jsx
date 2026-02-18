@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import { Award, BookOpen, Code, Coffee, Cpu, Database, Globe, Layout, Sparkles, Star, Target, Terminal, Trophy, Zap } from 'lucide-react';
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 const Sidebar = () => {
 
@@ -284,19 +284,18 @@ const Sidebar = () => {
 
   return (
     <div className={sidebarStyles.pageContainer}>
-      {/* Toggle Button for Mobile */}
-      <button
-        onClick={toggleSidebar}
-        className={`fixed top-4 left-4 z-50 p-2 bg-indigo-600 text-white rounded-lg shadow-lg md:hidden hover:bg-indigo-700 transition-colors`}
-      >
-        {isSidebarOpen ? <Layout size={24} /> : <Layout size={24} />}
-      </button>
+      {/* Mobile Overlay */}
+      {isSidebarOpen && window.innerWidth < 768 && (
+        <div
+          className="fixed inset-0 bg-black/30 z-30 md:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
 
       {/* Sidebar / Tech Selection */}
       <aside
         ref={asideRef}
-        className={`${sidebarStyles.sidebar} ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0`}
+        className={`fixed h-[calc(100vh-60px)] top-[60px] z-40 left-0 w-64 transform transition-transform duration-300 ease-in-out bg-white shadow-lg rounded-r-2xl overflow-y-auto border-r border-gray-200 md:relative md:top-0 md:h-screen md:translate-x-0 md:flex md:flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex items-center gap-3 mb-8">
           <div className="p-2 bg-indigo-600 rounded-lg">
@@ -331,10 +330,29 @@ const Sidebar = () => {
 
       {/* Main Content Area */}
       <main className={sidebarStyles.mainContent}>
+        {/* Mobile hamburger to open sidebar */}
+        <div className="flex items-center gap-3 mb-4 md:hidden">
+          <button
+            onClick={toggleSidebar}
+            className="p-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors"
+            aria-label="Open topics menu"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <span className="text-sm font-semibold text-gray-600">
+            {selectedTech
+              ? `${technologies.find(t => t.id === selectedTech)?.name} Quiz`
+              : "Select a Topic"}
+          </span>
+        </div>
+
         {!selectedTech ? (
           <div className="animate-fadeIn w-full max-w-5xl mx-auto">
+
             <div className="text-center mb-10">
-              <h2 className="text-4xl font-bold text-gray-800 mb-4 font-sans">
+              <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-4 font-sans">
                 Explore Quizzes
               </h2>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">
