@@ -1,9 +1,14 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import path from "path";
+import { fileURLToPath } from "url";
 import { connectDB } from "./config/db.js";
 import userRouter from "./routes/userRoutes.js";
 import resultRouter from "./routes/resultRoutes.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -20,13 +25,12 @@ connectDB();
 app.use("/api/auth", userRouter);
 app.use("/api/results", resultRouter);
 
-app.get("/", (req, res) => {
-  res.send("API WORKING");
-});
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, "../CRUD/dist")));
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ success: false, message: "Route not found" });
+// Handle client-side routing (must come after API routes)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../CRUD/dist", "index.html"));
 });
 
 // Error handler

@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix CRUD && npm run build --prefix CRUD",
+    "start": "npm start --prefix backend"
+  },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "tailwindcss": "^4.1.18"
