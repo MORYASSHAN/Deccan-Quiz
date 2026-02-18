@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { sidebarStyles } from '../assets/dummyStyles'
 import questionsData from "../assets/dummydata"
-import { toast } from 'react-toastify'
-import axios from 'axios'
 import { Award, BookOpen, Code, Coffee, Cpu, Database, Globe, Layout, Sparkles, Star, Target, Terminal, Trophy, Zap } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
@@ -14,8 +12,6 @@ const Sidebar = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
-
-  const submittedRef = useRef(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const asideRef = useRef(null);
 
@@ -146,7 +142,6 @@ const Sidebar = () => {
     setCurrentQuestion(0);
     setUserAnswers({});
     setShowResults(false);
-    submittedRef.current = false;
 
     // if (window.innerWidth < 768) setIsSidebarOpen(true); // Removed to prevent auto-opening sidebar on mobile
 
@@ -161,7 +156,6 @@ const Sidebar = () => {
     setCurrentQuestion(0);
     setUserAnswers({});
     setShowResults(false)
-    submittedRef.current = false;
 
     if (window.innerWidth < 768) setIsSidebarOpen(false);
   };
@@ -211,7 +205,6 @@ const Sidebar = () => {
     setCurrentQuestion(0);
     setUserAnswers({});
     setShowResults(false);
-    submittedRef.current = false;
   }
 
   const handleGoHome = () => {
@@ -262,36 +255,15 @@ const Sidebar = () => {
   const performance = getPerformanceStatus();
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
-  const getAuthHeader = () => {
-    const token = localStorage.getItem('token') ||
-      localStorage.getItem('authTokem') || null;
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  };
-
-  const submitResult = async () => {
-    if (submittedRef.current) return;
-    if (!selectedTech || !selectedLevel) return;
-
-    const payload = {
-      title: `${selectedTech.toUpperCase()} - ${selectedLevel.charAt(0).toUpperCase() + selectedLevel.slice(1)
-        } quiz`,
-      technology: selectedTech,
-      level: selectedLevel,
-      totalQuestions: score.total,
-      correct: score.correct,
-      wrong: score.total - score.correct,
-    };
-
-    try {
-      submittedRef.current = true;
-      toast.info('Saving your result....');
-      await axios.post(`${API_BASE}/api/results`, payload, {
-        headers: getAuthHeader()
-      })
-    } catch (err) {
-      console.warn(err);
+  const handleNextLevel = () => {
+    if (selectedLevel === "basic") {
+      handleLevelSelect("intermediate");
+    } else if (selectedLevel === "intermediate") {
+      handleLevelSelect("advanced");
+    } else if (selectedLevel === "advanced") {
+      handleGoHome();
     }
-  }
+  };
 
 
   return (
@@ -578,17 +550,20 @@ const Sidebar = () => {
 
             <div className="flex gap-4 justify-center">
               <button
-                onClick={resetQuiz}
-                className="px-8 py-3 bg-white border-2 border-indigo-100 text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 hover:border-indigo-200 hover:-translate-y-1 transition-all duration-300 shadow-sm"
-              >
-                Try Another Level
-              </button>
-              <button
-                onClick={submitResult}
+                onClick={handleNextLevel}
                 className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-200 transition-all duration-300 flex items-center gap-2"
               >
-                <Trophy size={20} />
-                Save Result
+                {selectedLevel === "advanced" ? (
+                  <>
+                    <Layout size={20} />
+                    Try Some Other Tech
+                  </>
+                ) : (
+                  <>
+                    <Zap size={20} />
+                    Try Another Level
+                  </>
+                )}
               </button>
             </div>
           </div>
