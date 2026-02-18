@@ -29,7 +29,7 @@ app.use("/api/results", resultRouter);
 app.use(express.static(path.join(__dirname, "../CRUD/dist")));
 
 // Handle client-side routing (must come after API routes)
-app.get("*", (req, res) => {
+app.get("/{*path}", (req, res) => {
   res.sendFile(path.join(__dirname, "../CRUD/dist", "index.html"));
 });
 
