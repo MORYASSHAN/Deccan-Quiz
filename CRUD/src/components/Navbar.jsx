@@ -40,6 +40,11 @@ const Navbar = ({ logoSrc }) => {
     navigate("/login");
   };
 
+  const triggerHomeReset = () => {
+    window.dispatchEvent(new CustomEvent("goHome"));
+    setMenuOpen(false);
+  };
+
   return (
     <nav className={navbarStyles.nav}>
       <div
@@ -54,7 +59,7 @@ const Navbar = ({ logoSrc }) => {
       <div className={navbarStyles.container}>
         {/* Logo */}
         <div className={navbarStyles.logoContainer}>
-          <Link to="/" className={navbarStyles.logoButton}>
+          <Link to="/" className={navbarStyles.logoButton} onClick={triggerHomeReset}>
             <div className={navbarStyles.logoInner}>
               <img
                 src={
@@ -78,7 +83,7 @@ const Navbar = ({ logoSrc }) => {
         {/* Desktop Buttons */}
         <div className={navbarStyles.desktopButtonsContainer}>
           <div className={navbarStyles.spacer}>
-            <NavLink to="/" className={navbarStyles.resultsButton}>
+            <NavLink to="/" className={navbarStyles.resultsButton} onClick={triggerHomeReset}>
               <Award className={navbarStyles.buttonIcon} />
               Home
             </NavLink>
@@ -120,7 +125,7 @@ const Navbar = ({ logoSrc }) => {
                 <NavLink
                   to="/"
                   className={navbarStyles.mobileMenuItem}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={triggerHomeReset}
                 >
                   <Award className={navbarStyles.mobileMenuIcon} />
                   Home

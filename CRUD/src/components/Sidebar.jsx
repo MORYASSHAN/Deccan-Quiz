@@ -148,7 +148,7 @@ const Sidebar = () => {
     setShowResults(false);
     submittedRef.current = false;
 
-    if (window.innerWidth < 768) setIsSidebarOpen(true);
+    // if (window.innerWidth < 768) setIsSidebarOpen(true); // Removed to prevent auto-opening sidebar on mobile
 
     setTimeout(() => {
       const el = asideRef.current?.querySelector(`[data-tech="${techId}"]`);
@@ -207,13 +207,25 @@ const Sidebar = () => {
   };
 
   //reset Quiz
-
   const resetQuiz = () => {
     setCurrentQuestion(0);
     setUserAnswers({});
     setShowResults(false);
     submittedRef.current = false;
   }
+
+  const handleGoHome = () => {
+    setSelectedTech(null);
+    setSelectedLevel(null);
+    resetQuiz();
+  }
+
+  // Listen for global reset (Home button in Navbar)
+  useEffect(() => {
+    const handleGlobalHome = () => handleGoHome();
+    window.addEventListener("goHome", handleGlobalHome);
+    return () => window.removeEventListener("goHome", handleGlobalHome);
+  }, []);
 
   const questions = getQuestions();
   const currentQ = questions[currentQuestion];
@@ -293,60 +305,64 @@ const Sidebar = () => {
       )}
 
       {/* Sidebar / Tech Selection */}
-      <aside
-        ref={asideRef}
-        className={`fixed h-[calc(100vh-60px)] top-[60px] z-40 left-0 w-64 transform transition-transform duration-300 ease-in-out bg-white shadow-lg rounded-r-2xl overflow-y-auto border-r border-gray-200 md:relative md:top-0 md:h-screen md:translate-x-0 md:flex md:flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-      >
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-2 bg-indigo-600 rounded-lg">
-            <Layout className="text-white" size={24} />
-          </div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-            TechQuiz
-          </h2>
-        </div>
-
-        <div className="space-y-4">
-          {technologies.map((tech) => (
-            <div
-              key={tech.id}
-              onClick={() => handleTechSelect(tech.id)}
-              data-tech={tech.id}
-              className={`${sidebarStyles.techItem} ${selectedTech === tech.id
-                ? "border-indigo-600 bg-indigo-50 shadow-md transform scale-[1.02]"
-                : "border-gray-100 hover:border-indigo-200 hover:bg-gray-50"
-                } ${tech.color}`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg bg-white bg-opacity-60`}>
-                  {tech.icon}
-                </div>
-                <span className="font-semibold">{tech.name}</span>
-              </div>
+      {!selectedLevel && (
+        <aside
+          ref={asideRef}
+          className={`fixed h-[calc(100vh-60px)] top-[60px] z-40 left-0 w-64 transform transition-transform duration-300 ease-in-out bg-white shadow-lg rounded-r-2xl overflow-y-auto border-r border-gray-200 md:relative md:top-0 md:h-screen md:translate-x-0 md:flex md:flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2 bg-indigo-600 rounded-lg">
+              <Layout className="text-white" size={24} />
             </div>
-          ))}
-        </div>
-      </aside>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+              TechQuiz
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {technologies.map((tech) => (
+              <div
+                key={tech.id}
+                onClick={() => handleTechSelect(tech.id)}
+                data-tech={tech.id}
+                className={`${sidebarStyles.techItem} ${selectedTech === tech.id
+                  ? "border-indigo-600 bg-indigo-50 shadow-md transform scale-[1.02]"
+                  : "border-gray-100 hover:border-indigo-200 hover:bg-gray-50"
+                  } ${tech.color}`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg bg-white bg-opacity-60`}>
+                    {tech.icon}
+                  </div>
+                  <span className="font-semibold">{tech.name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      )}
 
       {/* Main Content Area */}
-      <main className={sidebarStyles.mainContent}>
+      <main className={`${sidebarStyles.mainContent} ${selectedLevel ? "w-full md:ml-0" : ""}`}>
         {/* Mobile hamburger to open sidebar */}
-        <div className="flex items-center gap-3 mb-4 md:hidden">
-          <button
-            onClick={toggleSidebar}
-            className="p-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors"
-            aria-label="Open topics menu"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </button>
-          <span className="text-sm font-semibold text-gray-600">
-            {selectedTech
-              ? `${technologies.find(t => t.id === selectedTech)?.name} Quiz`
-              : "Select a Topic"}
-          </span>
-        </div>
+        {!selectedLevel && (
+          <div className="flex items-center gap-3 mb-4 md:hidden">
+            <button
+              onClick={toggleSidebar}
+              className="p-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-colors"
+              aria-label="Open topics menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+            <span className="text-sm font-semibold text-gray-600">
+              {selectedTech
+                ? `${technologies.find(t => t.id === selectedTech)?.name} Quiz`
+                : "Select a Topic"}
+            </span>
+          </div>
+        )}
 
         {!selectedTech ? (
           <div className="animate-fadeIn w-full max-w-5xl mx-auto">
@@ -409,12 +425,21 @@ const Sidebar = () => {
           </div>
         ) : !selectedLevel ? (
           <div className="animate-fadeIn">
-            <h2 className="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-3">
-              <span className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
-                {technologies.find((t) => t.id === selectedTech)?.icon}
-              </span>
-              Select Difficulty Level
-            </h2>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+                <span className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+                  {technologies.find((t) => t.id === selectedTech)?.icon}
+                </span>
+                Select Difficulty Level
+              </h2>
+              <button
+                onClick={handleGoHome}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-semibold"
+              >
+                <Layout size={18} />
+                Back to Topics
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {levels.map((level) => (
                 <div
@@ -449,14 +474,22 @@ const Sidebar = () => {
                   {selectedLevel.charAt(0).toUpperCase() + selectedLevel.slice(1)}
                 </h2>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-lg text-indigo-600 font-bold">
-                <Target size={20} />
-                <span>
-                  {Math.round(
-                    ((currentQuestion + 1) / questions.length) * 100
-                  )}
-                  %
-                </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleGoHome}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-bold"
+                >
+                  Home
+                </button>
+                <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-lg text-indigo-600 font-bold">
+                  <Target size={20} />
+                  <span>
+                    {Math.round(
+                      ((currentQuestion + 1) / questions.length) * 100
+                    )}
+                    %
+                  </span>
+                </div>
               </div>
             </div>
 
