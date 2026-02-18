@@ -39,7 +39,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: "Server error" });
 });
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+// Export app for Vercel
+export default app;
+
+// Start server (only if not running in production/Vercel)
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+}
