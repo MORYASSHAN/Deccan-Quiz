@@ -8,7 +8,7 @@ This project marks the beginning of my journey into full-stack web development a
 
 ---
 
-# 📌 Project Overview
+#  Project Overview
 
 Deccan Quiz is a modern, full-stack website developed using the MERN stack architecture.
 
