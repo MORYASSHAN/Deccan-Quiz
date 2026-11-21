@@ -1,5 +1,5 @@
 
-# 🌨️ Deccan Quiz
+# 🌨️ Deccan   Quiz
 
 🔗 **Live Website:**  (https://deccan-snowy.vercel.app/)
 
